@@ -6,11 +6,13 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-
+from pathlib import Path
 
 def getUUIDFromBoardID(board_id:str, logger_func = None):
         # Open the mcu_uuid-abc_ids.csv file
-        with open("mcu_uuid-abc_ids.csv", "r") as f:
+        # get current working directory path
+        current_wd = Path(__file__).parent.resolve()
+        with open(current_wd / "mcu_uuid-abc_ids.csv", "r") as f:
             lines = f.readlines()
             for line in lines:
                 if line[0] == "#":
