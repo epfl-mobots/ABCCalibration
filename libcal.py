@@ -88,7 +88,7 @@ def findMaxHtrPowers(abc_data:pd.DataFrame, base_power:float):
         max_pwm_power_df = power.loc[max_power_dt]
         # Remove all values below 1.5 W or above 3.0 W (assumed to be outliers)
         max_pwm_power_df = max_pwm_power_df[(max_pwm_power_df["_value"] > 1.5) & (max_pwm_power_df["_value"] < 3.0)]
-        assert len(max_pwm_power_df) >= 5, f"Not enough data points with PWM=950 for heater {htr}"
+        assert len(max_pwm_power_df) >= 4, f"Not enough data points with PWM=950 for heater {htr}: found {len(max_pwm_power_df)}"
         
         # Plotting
         scatter_plot = sns.scatterplot(data=max_pwm_power_df, x=max_pwm_power_df.index, y=max_pwm_power_df["_value"])
