@@ -8,6 +8,34 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from pathlib import Path
 
+def getConversionRatios(board_id:str, verbose:bool=False)->dict:
+    """
+    Reads the calibration values from the calibration file corresponding to the given board_id.
+    Returns a dictionary with the conversion ratios that allow to find a pwm from a pwr input
+    for every heater of the frame.
+    """
+    # Open the calibration file
+    current_wd = Path(__file__).parent.resolve()
+    calib_file = current_wd / f"max_pwm_powers.csv"
+    calib_df = pd.read_csv(calib_file)
+    # Set board_id col as index
+    calib_df.set_index("board_id", inplace=True)
+    board_calib_df = calib_df.loc[board_id, :].to_frame().T
+    if verbose:
+        print(f"[D] Calibration data for board_id {board_id}:\n{board_calib_df}")
+    conversion_ratios = {}
+    for htr in board_calib_df.columns:
+        if htr == "base":
+            continue
+        ratio = 950 / board_calib_df.loc[board_id, htr] # Unit is pwm/W
+        ratio_rounded = round(ratio, 4)
+        conversion_ratios[htr] = ratio_rounded
+
+    if verbose:
+        print(f"[D] Conversion ratios for board_id {board_id}:\n{conversion_ratios}")
+
+    return conversion_ratios
+
 def getUUIDFromBoardID(board_id:str, logger_func = None):
         # Open the mcu_uuid-abc_ids.csv file
         # get current working directory path
