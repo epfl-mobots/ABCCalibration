@@ -110,7 +110,7 @@ def findMaxHtrPowers(abc_data:pd.DataFrame, base_power:float):
             _pwm = pwm_htr.loc[dt]
             _pwm_others = pwm_other_htrs.loc[dt]
             # Check if all other heaters are at PWM=0
-            if _pwm["_value"] == 950 and all(_pwm_others["_value"] == 0):
+            if (_pwm["_value"] == 950).any() and (_pwm_others["_value"] == 0).all():
                 max_power_dt.append(dt)
 
         max_pwm_power_df = power.loc[max_power_dt]
